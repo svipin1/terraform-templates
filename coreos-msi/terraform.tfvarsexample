@@ -1,0 +1,11 @@
+azure_tenant_id = ""
+
+azure_subscription_id = ""
+
+admin_public_key = ""
+
+admin_password = ""
+
+contact = ""
+
+cloudconfig_file = "./cloudconfig.tpl"
