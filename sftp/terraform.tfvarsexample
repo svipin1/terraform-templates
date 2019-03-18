@@ -1,5 +1,13 @@
+azure_tenant_id = ""
+
+azure_subscription_id = ""
+
 admin_public_key = ""
-contact = ""
-storage_uri = ""
-sorage_password = ""
-storage_username = ""
+
+contact = "
+
+
+share_password = ""
+share_name = ""
+share_username = ""
+mountpoint = ""

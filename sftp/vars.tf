@@ -4,6 +4,11 @@ variable "azure_subscription_id" {}
 
 variable "contact" {}
 
+variable "share_username" {}
+variable "mountpoint" {}
+variable "share_password" {}
+variable "share_name" {}
+
 variable "azure_location" {
   default = "westeurope"
 }
@@ -50,8 +55,9 @@ variable "sftp_vm_image_offer" {
   default = "CentOS"
 }
 
+#7-CI supports cloud-init
 variable "sftp_vm_image_sku" {
-  default = "7.6"
+  default = "7-CI"
 }
 
 variable "sftp_vm_image_version" {

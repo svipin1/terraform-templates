@@ -82,6 +82,7 @@ resource "azurerm_public_ip" "sftp-publicip" {
   location            = "${var.azure_location}"
 
   allocation_method = "Static"
+  sku               = "Standard"
   domain_name_label = "${var.domain_name_label}"
 }
 
@@ -106,8 +107,13 @@ resource "azurerm_network_interface" "sftp-server-nic" {
 }
 
 data "template_file" "cloudconfig" {
-  #template = "${file("./script.sh")}"
   template = "${file("${path.root}${var.cloud_init_script_path}")}"
+  vars {
+    mountpoint="${var.mountpoint}"
+    share_name="${var.share_name}"
+    share_username="${var.share_username}"
+    share_password="${var.share_password}"
+  }
 }
 
 #https://www.terraform.io/docs/providers/template/d/cloudinit_config.html
@@ -182,7 +188,50 @@ resource "azurerm_lb" "sftp-lb" {
   }
 }
 
-data "azurerm_lb_backend_address_pool" "sftp-lb-pool" {
-  name            = "sftp-lb-pool"
-  loadbalancer_id = "${azurerm_lb.sftp-lb.id}"
+resource "azurerm_lb_backend_address_pool" "sftp-lb-pool" {
+  resource_group_name   = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.sftp-lb.id}"
+  name                = "sftppool"
+}
+
+resource "azurerm_lb_nat_rule" "ssh" {
+  count                          = "${var.sftp_count}"
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.sftp-lb.id}"
+  name                           = "nat-${element(azurerm_network_interface.sftp-server-nic.*.name, count.index)}"
+  protocol                       = "Tcp"
+  frontend_port                  = "222${count.index}"
+  backend_port                   = 22
+  frontend_ip_configuration_name = "sftp-pubip"
+}
+
+
+
+resource "azurerm_network_interface_backend_address_pool_association" "sftp-lb-pool-assoc" {
+  count                 = "${var.sftp_count}"
+  network_interface_id  = "${element(azurerm_network_interface.sftp-server-nic.*.id, count.index)}"
+  ip_configuration_name   = "${var.resource_name_prefix}-sftp-server-nic-ipconfig"
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.sftp-lb-pool.id}"
+}
+
+resource "azurerm_network_interface_nat_rule_association" "sftp-lb-nat-assoc" {
+  count                   = "${var.sftp_count}"
+  network_interface_id    = "${element(azurerm_network_interface.sftp-server-nic.*.id, count.index)}"
+  ip_configuration_name   = "${var.resource_name_prefix}-sftp-server-nic-ipconfig"
+  nat_rule_id             = "${element(azurerm_lb_nat_rule.ssh.*.id, count.index)}"
+}
+
+resource "local_file" "saved-manifesto" {
+  content = "${data.template_file.cloudconfig.rendered}"
+  filename = "rendered_cloudinit"
+}
+
+resource "null_resource" "run" {
+  triggers {
+    file = "${data.template_file.cloudconfig.rendered}"
+  }
+
+  provisioner "local-exec" {
+    command = "cat rendered_cloudinit"
+  }
 }
