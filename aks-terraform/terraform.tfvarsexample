@@ -1,0 +1,19 @@
+rg_name = ""
+
+cluster_name = ""
+
+dns_prefix = ""
+
+sp_client_id = ""
+
+sp_client_secret = ""
+
+public_key_data = ""
+
+tenant_id = ""
+
+serverapp_secret = ""
+
+serverapp_id = ""
+
+clientapp_id = ""
