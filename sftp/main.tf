@@ -194,6 +194,7 @@ resource "azurerm_lb_backend_address_pool" "sftp-lb-pool" {
   name                = "sftppool"
 }
 
+/*
 resource "azurerm_lb_nat_rule" "ssh" {
   count                          = "${var.sftp_count}"
   resource_group_name            = "${azurerm_resource_group.rg.name}"
@@ -205,6 +206,14 @@ resource "azurerm_lb_nat_rule" "ssh" {
   frontend_ip_configuration_name = "sftp-pubip"
 }
 
+resource "azurerm_network_interface_nat_rule_association" "sftp-lb-nat-assoc" {
+  count                   = "${var.sftp_count}"
+  network_interface_id    = "${element(azurerm_network_interface.sftp-server-nic.*.id, count.index)}"
+  ip_configuration_name   = "${var.resource_name_prefix}-sftp-server-nic-ipconfig"
+  nat_rule_id             = "${element(azurerm_lb_nat_rule.ssh.*.id, count.index)}"
+}
+
+*/
 
 
 resource "azurerm_network_interface_backend_address_pool_association" "sftp-lb-pool-assoc" {
@@ -214,24 +223,32 @@ resource "azurerm_network_interface_backend_address_pool_association" "sftp-lb-p
   backend_address_pool_id = "${azurerm_lb_backend_address_pool.sftp-lb-pool.id}"
 }
 
-resource "azurerm_network_interface_nat_rule_association" "sftp-lb-nat-assoc" {
-  count                   = "${var.sftp_count}"
-  network_interface_id    = "${element(azurerm_network_interface.sftp-server-nic.*.id, count.index)}"
-  ip_configuration_name   = "${var.resource_name_prefix}-sftp-server-nic-ipconfig"
-  nat_rule_id             = "${element(azurerm_lb_nat_rule.ssh.*.id, count.index)}"
+resource "azurerm_lb_probe" "sshprobe" {
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.sftp-lb.id}"
+  name                = "sshprobe"
+  port                = 22
 }
 
-resource "local_file" "saved-manifesto" {
-  content = "${data.template_file.cloudconfig.rendered}"
-  filename = "rendered_cloudinit"
+resource "azurerm_lb_rule" "sshlbrule" {
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.sftp-lb.id}"
+  name                           = "SSHLbRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 22
+  backend_port                   = 22
+  frontend_ip_configuration_name = "sftp-pubip"
+  load_distribution              = "SourceIP"
+  probe_id                       = "${azurerm_lb_probe.sshprobe.id}"
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.sftp-lb-pool.id}"
 }
 
-resource "null_resource" "run" {
-  triggers {
-    file = "${data.template_file.cloudconfig.rendered}"
-  }
 
-  provisioner "local-exec" {
-    command = "cat rendered_cloudinit"
-  }
+data "azurerm_public_ip" "sftp-publicip" {
+  name                = "${azurerm_public_ip.sftp-publicip.name}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+}
+
+output "public_ip_address" {
+  value = "${data.azurerm_public_ip.sftp-publicip.ip_address}"
 }
