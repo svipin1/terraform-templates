@@ -1,10 +1,10 @@
-name: TFApply
+name: TFApplyVM
 
 on:
   push:
     paths:
     - 'vm/**'
-    
+
 jobs:
   tfapply:
     runs-on: ubuntu-latest
