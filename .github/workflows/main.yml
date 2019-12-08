@@ -6,10 +6,7 @@ jobs:
   tfapply:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: ls 
-    - run: pwd
-    - uses: ams0/terraform-apply-for-azure-action@v5
+    - uses: ams0/terraform-apply-for-azure-action@v6
       with:
         arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
         arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
