@@ -1,9 +1,9 @@
-name: CI
+name: TFApply
 
 on: [push]
 
 jobs:
-  provisioning:
+  tfapply:
     runs-on: ubuntu-latest
     steps:
     - uses: ams0/terraform-apply-for-azure-action@v4
