@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - run: ls 
+    - run: pwd
     - uses: ams0/terraform-apply-for-azure-action@v4
       with:
         arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
