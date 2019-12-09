@@ -22,13 +22,13 @@ module "resource_group" {
 
 module "vnet" {
   source              = "../modules/vnet/"
-  resource_group_name = "${var.rg_name}"
-  location            = "${var.location}"
-  vnet_name           = "${var.vnet_name}"
-  dns_servers         = "${var.dns_servers}"
-  address_space       = "${var.address_space}"
-  subnet_prefixes     = "${var.subnet_prefixes}"
-  subnet_names        = "${var.subnet_names}"
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  vnet_name           = var.vnet_name
+  dns_servers         = var.dns_servers
+  address_space       = var.address_space
+  subnet_prefixes     = var.subnet_prefixes
+  subnet_names        = var.subnet_names
 }
 
 /*
