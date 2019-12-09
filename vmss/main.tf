@@ -25,13 +25,3 @@ module "vnet" {
   subnet_prefixes     = "${var.subnet_prefixes}"
   subnet_names        = "${var.subnet_names}"
 }
-
-/*
-resource "azurerm_virtual_machine" "vm" {
-  name                = var.vm_name
-  resource_group_name = var.rg_name
-  vm_size             = var.vm_size
-  location            = "${var.location}"
-
-}
-*/
