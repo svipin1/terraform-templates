@@ -1,0 +1,3 @@
+This template deploys an AKS cluster with Kubenet+Calico in a custom vnet with 2 nodepools in two separate and updates the AKS-deployed RouteTable to include both subnets, fixing the networking problems as evidenced by issue [1338](https://github.com/Azure/AKS/issues/1338).
+
+Note the use of `external` data type with a script that outputs the `nameSuffix` property of the AKS resources, that can be used to import the RT and associate it to the subnets.

@@ -3,6 +3,7 @@
 .DS_Store
 ./*.DS_Store
 example.tf
+./*.tfvars
 terraform.tfplan
 terraform.tfstate
 bin/
@@ -32,3 +33,5 @@ website/vendor
 !command/test-fixtures/**/*.tfstate
 !command/test-fixtures/**/.terraform/
 
+aks-kubenet-multipool-multisubnet/terraform.tfvars
+modules/nsg/terraform.tfvars
