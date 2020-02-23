@@ -16,14 +16,6 @@ variable "location" {
     
 }
 
-variable "ssh_key_data" {
-
-}
-
 variable "admin_username" {
 
-}
-
-variable "private_key" {
-    
 }
