@@ -1,0 +1,1 @@
+Based on https://stackoverflow.com/questions/60361124/terraform-connect-to-aks-cluster-without-running-az-login/60364346#60364346
