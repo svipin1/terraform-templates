@@ -1,17 +1,36 @@
 variable "resource_group_name" {
-    default = "aksrg"
-}
-variable "client_id" {
+  default = "aksrg"
 }
 
-variable "client_secret" {
-    
+variable "kubernetes_client_id" {
+}
+
+variable "kubernetes_client_secret" {
 }
 
 variable "kubernetes_version" {
-    
 }
 
 variable "location" {
-    
+}
+
+variable "address_space" {
+}
+
+variable "defaultpool" {
+  type = list(object({
+    cidr      = string,
+    vmsize    = string,
+    nodecount = string,
+    name      = string
+  }))
+}
+
+variable "pools" {
+  type = list(object({
+    cidr      = string,
+    vmsize    = string,
+    nodecount = string,
+    name      = string
+  }))
 }

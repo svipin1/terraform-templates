@@ -1,4 +1,5 @@
 provider "azurerm" {
+  features {}
 }
 
 resource "azurerm_resource_group" "aksrg" {
@@ -6,26 +7,30 @@ resource "azurerm_resource_group" "aksrg" {
   location = var.location
 }
 
-resource "azurerm_virtual_network" "aks-vnet" {
-  name                = "aks-vnet"
+resource "azurerm_virtual_network" "aksvnet" {
+  name                = "aksvnet"
   location            = azurerm_resource_group.aksrg.location
   resource_group_name = azurerm_resource_group.aksrg.name
-  address_space       = ["172.20.0.0/16"]
+  address_space       = var.address_space
 
 }
 
-resource "azurerm_subnet" "akssubnetbase" {
-  name                 = "akssubnetbase"
+resource "azurerm_subnet" "basesubnet" {
+  name                 = var.defaultpool[0].name
+  address_prefix       = var.defaultpool[0].cidr
+  virtual_network_name = azurerm_virtual_network.aksvnet.name
   resource_group_name  = azurerm_resource_group.aksrg.name
-  virtual_network_name = azurerm_virtual_network.aks-vnet.name
-  address_prefix       = "172.20.1.0/24"
+
 }
 
-resource "azurerm_subnet" "akssubnetextra" {
-  name                 = "akssubnetextra"
+
+resource "azurerm_subnet" "poolsubnets" {
+  count                = length(var.pools)
+  name                 = var.pools[count.index].name
+  address_prefix       = var.pools[count.index].cidr
+  virtual_network_name = azurerm_virtual_network.aksvnet.name
   resource_group_name  = azurerm_resource_group.aksrg.name
-  virtual_network_name = azurerm_virtual_network.aks-vnet.name
-  address_prefix       = "172.20.2.0/24"
+
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -36,10 +41,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
-    name           = "default"
-    node_count     = 1
-    vm_size        = "Standard_D2_v2"
-    vnet_subnet_id = azurerm_subnet.akssubnetbase.id
+    name           = var.defaultpool[0].name
+    node_count     = var.defaultpool[0].nodecount
+    vm_size        = var.defaultpool[0].vmsize
+    vnet_subnet_id = azurerm_subnet.basesubnet.id
   }
 
   addon_profile {
@@ -57,21 +62,22 @@ resource "azurerm_kubernetes_cluster" "aks" {
     load_balancer_sku  = "Standard"
   }
   service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+    client_id     = var.kubernetes_client_id
+    client_secret = var.kubernetes_client_secret
   }
 }
 
-
 resource "azurerm_kubernetes_cluster_node_pool" "extra" {
-  name                  = "extra"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-  vm_size               = "Standard_DS2_v2"
-  node_count            = 1
-  vnet_subnet_id        = azurerm_subnet.akssubnetextra.id
+
+
+  count          = length(var.pools)
+  name           = var.pools[count.index].name
+  vm_size        = var.pools[count.index].vmsize
+  node_count     = var.pools[count.index].nodecount
+  vnet_subnet_id = azurerm_subnet.poolsubnets[count.index].id
 
 }
-
 
 locals {
   agents_resource_group_name = "MC_${azurerm_resource_group.aksrg.name}_${azurerm_kubernetes_cluster.aks.name}_${azurerm_resource_group.aksrg.location}"
@@ -100,29 +106,9 @@ data "azurerm_route_table" "aksrt" {
   resource_group_name = "${local.agents_resource_group_name}"
 }
 
-resource "azurerm_subnet_route_table_association" "akssubnetbase" {
-  subnet_id      = azurerm_subnet.akssubnetbase.id
+resource "azurerm_subnet_route_table_association" "poolsubnets" {
+  count = length(var.pools)
+
+  subnet_id      = azurerm_subnet.poolsubnets[count.index].id
   route_table_id = data.azurerm_route_table.aksrt.id
-}
-
-resource "azurerm_subnet_route_table_association" "akssubnetextra" {
-  subnet_id      = azurerm_subnet.akssubnetextra.id
-  route_table_id = data.azurerm_route_table.aksrt.id
-}
-
-output "nameSuffix" {
-  value = "${data.external.get-namesuffix.result.nameSuffix}"
-}
-
-output "agents_resource_group_name" {
-  value = "${local.agents_resource_group_name}"
-}
-
-
-output "client_certificate" {
-  value = azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate
-}
-
-output "kube_config" {
-  value = azurerm_kubernetes_cluster.aks.kube_config_raw
 }
