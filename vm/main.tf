@@ -1,27 +1,22 @@
-/*
-comment
-*/
-
-
-terraform {
-  backend "azurerm" {
-    storage_account_name = "tfme"
-    container_name       = "tfstate"
-  }
-}
+# terraform {
+#  backend "azurerm" {
+#    storage_account_name = "tfme"
+#    container_name       = "tfstate"
+#  }
+#}
 
 terraform {
   required_version = ">= 0.12.0"
 }
 
 module "resource_group" {
-  source   = "../modules/resource_group/"
+  source   = "github.com/ams0/terraform-modules.git//modules/resource_group"
   location = "${var.location}"
   name     = "${var.rg_name}"
 }
 
 module "vnet" {
-  source              = "../modules/vnet/"
+  source              = "github.com/ams0/terraform-modules.git///modules/vnet"
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   vnet_name           = var.vnet_name

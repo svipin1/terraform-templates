@@ -1,0 +1,17 @@
+resource "null_resource" "aksvmkubeconfig" {
+
+  provisioner "remote-exec" {
+    connection {
+      host     = azurerm_public_ip.winssh.ip_address
+      type     = "winrm"
+      user     = var.admin_username
+      password = var.admin_password
+      https    = true
+      insecure = true
+      cacert = 
+    }
+    inline = [
+      "mkdir C:\temp"
+    ]
+  }
+}

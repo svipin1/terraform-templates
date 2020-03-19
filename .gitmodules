@@ -1,0 +1,3 @@
+[submodule "terraform-modules"]
+	path = modules
+	url = https://github.com/ams0/terraform-modules.git
