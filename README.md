@@ -1,5 +1,9 @@
 # Terraform templates
 
+```
+ git clone --recurse-submodules https://github.com/ams0/terraform-templates.git
+```
+
 ```bash
 tf init -backend-config="key=`basename $PWD`"
 tf plan -var-file=`basename $PWD`.tfvars

@@ -37,3 +37,4 @@ aks-kubenet-multipool-multisubnet/terraform.tfvars
 modules/nsg/terraform.tfvars
 aks-vm/privkey
 aks-vm/.terraform.tfstate.lock.info
+aks-arm/terraform.tfvars
