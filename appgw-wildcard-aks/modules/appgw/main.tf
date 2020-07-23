@@ -2,7 +2,8 @@ resource "azurerm_public_ip" "appgwip" {
   name                = "appgwip"
   resource_group_name = var.resource_group_name
   location            = var.location
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  domain_name_label   = "appgwip"
   sku                 = "Standard"
 }
 
@@ -12,9 +13,9 @@ resource "azurerm_application_gateway" "aksappgw" {
   location            = var.location
 
   sku {
-    name     = "Standard_Small"
-    tier     = "Standard"
-    capacity = 2
+    name     = "Standard_v2"
+    tier     = "Standard_v2"
+    capacity = 1
   }
 
   frontend_ip_configuration {

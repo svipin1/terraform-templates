@@ -22,7 +22,7 @@ resource "azurerm_virtual_network" "c1_vnet" {
 resource "azurerm_subnet" "c1_subnet" {
   name                 = "c1_subnet"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.appgw_vnet.name
+  virtual_network_name = azurerm_virtual_network.c1_vnet.name
   address_prefixes     = var.c1_vnet_subnet_address_prefix
 }
 
@@ -36,7 +36,7 @@ resource "azurerm_virtual_network" "c2_vnet" {
 resource "azurerm_subnet" "c2_subnet" {
   name                 = "c2_subnet"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.appgw_vnet.name
+  virtual_network_name = azurerm_virtual_network.c2_vnet.name
   address_prefixes     = var.c2_vnet_subnet_address_prefix
 }
 
@@ -68,15 +68,3 @@ resource "azurerm_virtual_network_peering" "c2appgw" {
   remote_virtual_network_id = azurerm_virtual_network.appgw_vnet.id
 }
 
-resource "azurerm_private_dns_zone" "aksdnszone" {
-  name                = "aks.cluster"
-  resource_group_name = var.resource_group_name
-}
-
-
-resource "azurerm_private_dns_zone_virtual_network_link" "appgwdnslink" {
-  name                  = "appgwdnslink"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.aksdnszone.name
-  virtual_network_id    = azurerm_virtual_network.appgw_vnet.id
-}

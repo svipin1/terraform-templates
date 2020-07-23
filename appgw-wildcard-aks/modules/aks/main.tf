@@ -1,8 +1,8 @@
-resource "azurerm_kubernetes_cluster" "example" {
-  name                = "c1"
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
-  dns_prefix          = "c1"
+  dns_prefix          = var.name
 
   kubernetes_version = var.kubernetes_version
 
@@ -13,6 +13,9 @@ resource "azurerm_kubernetes_cluster" "example" {
     vnet_subnet_id = var.vnet_subnet_id
   }
 
+  role_based_access_control {
+    enabled = true
+  }
   identity {
     type = "SystemAssigned"
   }
@@ -20,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "example" {
   linux_profile {
     admin_username = "azureuser"
     ssh_key {
-      key_data = "fake_ssh_key"
+      key_data = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzUc+bnA4b1b9LE+nau4QFbEE+HFkO9FPVGGicnYzUUKqWD5aV7R5LCGb0gLJwBxcETxRM+6lZuCtaNuqGVT2A/yjOOq5VKblrfOx7nSulrovXsAbmtiwpslGWuetVWg85tcGIQkv0dOZW8eqzcwxeYsXZCKIWvXqMnPpBObmt+RyllF7Bu8C2qgV1UILnz37mPUVuIy+LjgVkreGxy4FywZVO3GdQvIU9oOX4EhZ8Xcf9COwa64lI1kwqMhO3kAimpBiczo7XRcF1jVwjni7WZQhTJe3LDgoDx2ELggF2DT9LVfzAjaIwtzRGvB68BUXpNK9licgOUTQWdILrNguj fake ssh key"
     }
   }
 
@@ -29,3 +32,4 @@ resource "azurerm_kubernetes_cluster" "example" {
     network_policy = "calico"
   }
 }
+

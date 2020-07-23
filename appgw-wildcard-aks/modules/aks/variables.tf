@@ -8,6 +8,11 @@ variable "location" {
   default     = ""
 }
 
+variable "name" {
+  description = "name"
+  default     = ""
+}
+
 variable "kubernetes_version" {
   description = "kubernetes_version"
   default     = ""

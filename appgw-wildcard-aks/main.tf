@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg" {
 
 module "network" {
   source                           = "./modules/network"
-  resource_group_name              = var.resource_group_name
+  resource_group_name              = azurerm_resource_group.rg.name
   location                         = var.location
   location_c1                      = var.location_c1
   location_c2                      = var.location_c2
@@ -23,7 +23,7 @@ module "network" {
 
 module "appgw" {
   source                      = "./modules/appgw"
-  resource_group_name         = var.resource_group_name
+  resource_group_name         = azurerm_resource_group.rg.name
   location                    = var.location
   gateway_ip_configuration_id = module.network.gateway_ip_configuration_id
   fqdn1                       = var.fqdn1
@@ -32,16 +32,18 @@ module "appgw" {
 
 module "aks_c1" {
   source              = "./modules/aks"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.location_c1
+  name                = "aksc1"
   kubernetes_version  = var.kubernetes_version
   vnet_subnet_id      = module.network.c1_vnet_subnet_id
 }
 
 module "aks_c2" {
   source              = "./modules/aks"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.location_c2
+  name                = "aksc2"
   kubernetes_version  = var.kubernetes_version
   vnet_subnet_id      = module.network.c2_vnet_subnet_id
 }
