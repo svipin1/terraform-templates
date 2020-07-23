@@ -33,11 +33,15 @@ module "appgw" {
 module "aks_c1" {
   source              = "./modules/aks"
   resource_group_name = var.resource_group_name
-  location            = var.location
+  location            = var.location_c1
+  kubernetes_version  = var.kubernetes_version
+  vnet_subnet_id      = module.network.c1_vnet_subnet_id
 }
 
 module "aks_c2" {
   source              = "./modules/aks"
   resource_group_name = var.resource_group_name
-  location            = var.location
+  location            = var.location_c2
+  kubernetes_version  = var.kubernetes_version
+  vnet_subnet_id      = module.network.c2_vnet_subnet_id
 }

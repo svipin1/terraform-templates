@@ -7,3 +7,13 @@ variable "location" {
   description = "location"
   default     = ""
 }
+
+variable "kubernetes_version" {
+  description = "kubernetes_version"
+  default     = ""
+}
+
+variable "vnet_subnet_id" {
+  description = "vnet_subnet_id"
+  default     = ""
+}

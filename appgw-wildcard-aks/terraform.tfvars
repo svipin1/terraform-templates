@@ -9,5 +9,6 @@ c1_vnet_subnet_address_prefix    = ["10.11.0.0/24"]
 c2_vnet_address_space            = ["10.12.0.0/16"]
 c2_vnet_subnet_address_prefix    = ["10.12.0.0/24"]
 
-fqdn1 = "*.c1.aks.cluster"
-fqdn2 = "*.c2.aks.cluster"
+fqdn1              = "*.c1.aks.cluster"
+fqdn2              = "*.c2.aks.cluster"
+kubernetes_version = "1.18.4"

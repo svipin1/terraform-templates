@@ -57,3 +57,9 @@ variable "fqdn2" {
   description = "fqdn2"
   default     = ""
 }
+
+variable "kubernetes_version" {
+  description = "kubernetes_version"
+  default     = ""
+}
+
