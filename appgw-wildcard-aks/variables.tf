@@ -18,6 +18,11 @@ variable "location_c2" {
   default     = ""
 }
 
+variable "appgw_pubip_label" {
+  description = "appgw_pubip_label"
+  default     = ""
+}
+
 variable "appgw_vnet_address_space" {
   description = "appgw_vnet_address_space"
   default     = ""

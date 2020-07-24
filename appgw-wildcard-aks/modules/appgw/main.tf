@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "appgwip" {
   resource_group_name = var.resource_group_name
   location            = var.location
   allocation_method   = "Static"
-  domain_name_label   = "appgwip"
+  domain_name_label   = var.appgw_pubip_label
   sku                 = "Standard"
 }
 
@@ -38,11 +38,13 @@ resource "azurerm_application_gateway" "aksappgw" {
   }
 
   backend_http_settings {
-    name                  = "aksappgw-behhtp"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 60
+    name                                = "aksappgw-behhtp"
+    cookie_based_affinity               = "Disabled"
+    port                                = 80
+    protocol                            = "Http"
+    #this seems to be erratic, try to change it if you get bad gateway hitting the frontend IP, but the backend is known to work.
+    pick_host_name_from_backend_address = true
+    request_timeout                     = 60
   }
 
   http_listener {

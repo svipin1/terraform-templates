@@ -22,3 +22,8 @@ variable "fqdn2" {
   description = "fqdn2"
   default     = ""
 }
+
+variable "appgw_pubip_label" {
+  description = "appgw_pubip_label"
+  default     = ""
+}

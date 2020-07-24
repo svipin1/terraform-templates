@@ -36,8 +36,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 # Grant AKS cluster access to use AKS subnet
 
 resource "azurerm_role_assignment" "aks" {
-principal_id = azurerm_kubernetes_cluster.aks.identity[0].principal_id
-role_definition_name = "Network Contributor"
-scope                = var.vnet_subnet_id  # Subnet ID
+  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+  role_definition_name = "Network Contributor"
+  scope                = var.vnet_subnet_id # Subnet ID
 }
 

@@ -22,3 +22,8 @@ variable "vnet_subnet_id" {
   description = "vnet_subnet_id"
   default     = ""
 }
+
+variable "aksdnszone" {
+  description = "aksdnszone"
+  default     = ""
+}
