@@ -1,0 +1,1 @@
+This template creates a single VM in Azure with 2 premium SSD managed disks, makes a RAID1 out of them, installs an NFS server on it and export the RAID as NFSv4 volume to the internal network. It can be used with AKS and the [nfs-client-provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client)
