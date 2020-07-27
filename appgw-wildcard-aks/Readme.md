@@ -4,10 +4,10 @@ This template will create an app gateway in one region, two AKS cluster in 2 dif
 
 TODO:
 
-- Zonal frontend IP
-- SSL certificate termination at the AppGw
-- Interpolate region in fqdn backend
-
+- [] Zonal frontend IP
+- [] SSL certificate termination at the AppGw
+- [] Interpolate region in fqdn backend
+- [] Add FrontDoor/Traffic Manager, add a second AppGw with the same backends, let TM deciced which AppGw is active and let the traffic be globally loadbalanced.
 
 Test by applying in each cluster:
 
