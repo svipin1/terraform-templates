@@ -14,3 +14,4 @@ Results:
 
 [<img src="https://github.com/ams0/terraform-templates/workflows/TFApplyVM/badge.svg">](https://github.com/ams0/terraform-templates/actions?query=workflow%3ATFApplyVM)
 
+
