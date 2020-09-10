@@ -8,6 +8,11 @@ variable "location" {
   default     = ""
 }
 
+variable "aksdnszone_name" {
+  description = "aksdnszone_name"
+  default     = ""
+}
+
 variable "location_c1" {
   description = "location_c1"
   default     = ""
