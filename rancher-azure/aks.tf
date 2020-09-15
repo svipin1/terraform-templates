@@ -1,32 +1,37 @@
 resource "random_id" "instance_id" {
- byte_length = 3
+  byte_length = 3
 }
 
-resource "rancher2_cluster" "cluster_az" {
-  name         = "aks-${random_id.instance_id.hex}"
-  description  = "Terraform"
+resource "rancher2_cluster" "aks" {
+  name        = var.cluster_name
+  description = "Terraform"
 
   aks_config {
-    agent_dns_prefix = "agent-${random_id.instance_id.hex}"
-    master_dns_prefix = "aks-${random_id.instance_id.hex}"
-    client_id = var.az-client-id
-    client_secret = var.az-client-secret
-    subscription_id = var.az-subscription-id
-    tenant_id = var.az-tenant-id
-    kubernetes_version = var.k8version
-    resource_group = var.az-resource-group
-    virtual_network_resource_group = var.az-resource-group
-    subnet = var.az-subnet
-    virtual_network = var.az-vnet
-    admin_username = "rancher"
-    ssh_public_key_contents = file("~/.ssh/id_rsa.pub")
-    agent_vm_size = var.type
-    agent_os_disk_size = var.disksize
-    agent_pool_name = "rancher0"
-    count = var.numnodes
-    enable_monitoring = false
-    location = var.az-region
-    max_pods = 70
-    network_plugin = var.az-plugin
+    master_dns_prefix = "aksrancher"
+    agent_dns_prefix = "dns"
+    client_id         = var.az_client_id
+    client_secret     = var.az_client_secret
+    subscription_id   = var.az_subscription_id
+    tenant_id         = var.az_tenant_id
+
+    resource_group          = var.az_resource_group
+    location                = var.location
+
+    kubernetes_version      = var.kubernetes_version
+    admin_username          = var.admin_username
+    ssh_public_key_contents = var.ssh_key
+    agent_vm_size           = var.agent_vm_size
+    agent_os_disk_size      = var.agent_os_disk_size
+    agent_pool_name         = var.agent_pool_name
+    count                   = var.node_count
+    enable_monitoring       = var.enable_monitoring
+    
+    max_pods                = var.max_pods
+    network_plugin          = var.network_plugin
+
+    virtual_network_resource_group = var.az_resource_group
+    virtual_network = var.az_vnet
+    subnet                  = var.az_subnet
+
   }
 }
