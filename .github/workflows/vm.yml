@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - ${{env.path}/**'
+    - '${{env.path}}/**'
 
 jobs:
   tfstate:
@@ -21,7 +21,7 @@ jobs:
         arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
         arm_access_key: ${{ secrets.ARM_ACCESS_KEY }}
-        path: ${{env.path}
+        path: ${{ env.path }}
     - uses: ams0/terraform-destroy-for-azure-action@v1
       with:
         arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
@@ -29,4 +29,4 @@ jobs:
         arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
         arm_access_key: ${{ secrets.ARM_ACCESS_KEY }}
-        path: ${{env.path}
+        path: ${{ env.path }}
