@@ -14,7 +14,6 @@ resource "rancher2_cluster" "aks" {
     subscription_id   = var.az_subscription_id
     tenant_id         = var.az_tenant_id
 
-    agent_pool_type = "VirtualMachineScaleSets"
 
     resource_group = var.az_resource_group
     location       = var.location
