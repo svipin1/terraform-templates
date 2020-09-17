@@ -1,5 +1,4 @@
 client_id          = "cca39846-4dd8-4a83-a575-753451183da9"
-client_secret      = "ac00c4bc-6b55-4e35-9954-87b50b305de5"
-kubernetes_version = "1.17.0"
+kubernetes_version = "1.18.6"
 location           = "westeurope"
 admin_username     = "ubuntu"

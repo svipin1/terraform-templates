@@ -3,6 +3,9 @@ variable "rancher_token" {}
 
 variable "cluster_name" {}
 
+variable "master_dns_prefix" {}
+variable "agent_dns_prefix" {}
+
 variable "az_client_id" {}
 variable "az_client_secret" {}
 variable "az_subscription_id" {}

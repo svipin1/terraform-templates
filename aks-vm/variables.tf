@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-    default = "aksrg"
+    default = "aksvm"
 }
 variable "client_id" {
 }

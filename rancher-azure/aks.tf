@@ -4,18 +4,20 @@ resource "random_id" "instance_id" {
 
 resource "rancher2_cluster" "aks" {
   name        = var.cluster_name
-  description = "Terraform"
+  description = "Made by Terraform"
 
   aks_config {
     master_dns_prefix = "aksrancher"
-    agent_dns_prefix = "dns"
+    agent_dns_prefix  = "dns"
     client_id         = var.az_client_id
     client_secret     = var.az_client_secret
     subscription_id   = var.az_subscription_id
     tenant_id         = var.az_tenant_id
 
-    resource_group          = var.az_resource_group
-    location                = var.location
+    agent_pool_type = "VirtualMachineScaleSets"
+
+    resource_group = var.az_resource_group
+    location       = var.location
 
     kubernetes_version      = var.kubernetes_version
     admin_username          = var.admin_username
@@ -25,13 +27,13 @@ resource "rancher2_cluster" "aks" {
     agent_pool_name         = var.agent_pool_name
     count                   = var.node_count
     enable_monitoring       = var.enable_monitoring
-    
-    max_pods                = var.max_pods
-    network_plugin          = var.network_plugin
+
+    max_pods       = var.max_pods
+    network_plugin = var.network_plugin
 
     virtual_network_resource_group = var.az_resource_group
-    virtual_network = var.az_vnet
-    subnet                  = var.az_subnet
+    virtual_network                = var.az_vnet
+    subnet                         = var.az_subnet
 
   }
 }

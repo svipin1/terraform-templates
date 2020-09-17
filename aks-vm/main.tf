@@ -19,14 +19,14 @@ resource "azurerm_subnet" "akssubnet" {
   name                 = "akssubnet"
   resource_group_name  = azurerm_resource_group.aksvm.name
   virtual_network_name = azurerm_virtual_network.aksvnet.name
-  address_prefix       = "172.20.1.0/24"
+  address_prefixes       = ["172.20.1.0/24"]
 }
 
 resource "azurerm_subnet" "vmsubnet" {
   name                 = "vmsubnet"
   resource_group_name  = azurerm_resource_group.aksvm.name
   virtual_network_name = azurerm_virtual_network.aksvnet.name
-  address_prefix       = "172.20.2.0/24"
+  address_prefixes       = ["172.20.2.0/24"]
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -127,6 +127,8 @@ resource "azurerm_virtual_machine" "aksvm" {
 }
 resource "null_resource" "aksvmkubeconfig" {
 
+  depends_on = [azurerm_virtual_machine.aksvm]
+
 
   #https://github.com/hashicorp/terraform/issues/16330
 
@@ -138,7 +140,7 @@ resource "null_resource" "aksvmkubeconfig" {
       private_key = tls_private_key.sshkey.private_key_pem
     }
     inline = [
-      "mkdir /home/ubuntu/.kube/"
+      "mkdir /home/ubuntu/.kube/ ; sudo snap install --classic kubectl "
     ]
   }
   provisioner "file" {
@@ -159,6 +161,10 @@ output "kube_config" {
 
 output "ssh_private_key" {
   value = tls_private_key.sshkey.private_key_pem
+}
+
+output "ssh_public_key" {
+  value = tls_private_key.sshkey.public_key_openssh
 }
 
 output "azurerm_public_ip" {
