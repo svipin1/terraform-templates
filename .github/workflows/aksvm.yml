@@ -10,7 +10,7 @@ on:
     - ${{env.path}/**'
 
 jobs:
-  tfapply:
+  tftest:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1

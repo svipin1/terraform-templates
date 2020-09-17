@@ -1,9 +1,6 @@
 terraform {
-  backend "remote" {
-    organization = "cse"
-
-    workspaces {
-      name = "terraform-templates-vm"
-    }
+  backend "azurerm" {
+    storage_account_name = "tfme"
+    container_name       = "tfstatevm"
   }
 }

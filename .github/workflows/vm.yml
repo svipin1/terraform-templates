@@ -1,13 +1,16 @@
 name: Terraform Test - vm
 
+env:
+  path: aks-vm
+
 on:
   workflow_dispatch:
   push:
     paths:
-    - 'vm/**'
+    - ${{env.path}/**'
 
 jobs:
-  tfapply:
+  tfstate:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -18,7 +21,7 @@ jobs:
         arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
         arm_access_key: ${{ secrets.ARM_ACCESS_KEY }}
-        path: vm
+        path: ${{env.path}
     - uses: ams0/terraform-destroy-for-azure-action@v1
       with:
         arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
@@ -26,4 +29,4 @@ jobs:
         arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
         arm_access_key: ${{ secrets.ARM_ACCESS_KEY }}
-        path: vm
+        path: ${{env.path}
